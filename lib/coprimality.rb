@@ -1,71 +1,34 @@
-# This method takes two integers, m and n, and determines whether those integers are co-prime
-
 # this method takes a number and returns an array of factors.
-def is_factor?(x)
-  factor_arr = []
-  n = x
-  while n > 1
-    if x % n == 0
-      factor_arr.push(n)
-    end
-    n -= 1
-  end
-  factor_arr
+def factors(x)
+  (2..x).select {|n| x % n == 0}
 end
 
 #takes a number and returns true if it is prime
 def prime_checker(x)
   prime = true
-  n = x - 1
-  while n > 2
-    if x % n == 0
-      prime = false
-    end
-    n -= 1
-  end
+  (2..x-1).each {|n| prime = false if x % n == 0}
   prime
 end
 
+def prime_factors(arr)
+  primes = []
+  arr.each {|i| primes.push(i) if prime_checker(i) == true}
+  primes
+end
 
 
 def determine_coprimality(m, n)
   # returns false if m or n is between -1 and 1
-  if m ==0 || m == 1 || m == -1
-    return false
-  elsif n == 0 || n == 1 || n == -1
+  if (m ==0 || m == 1 || m == -1) || (n == 0 || n == 1 || n == -1)
     return false
   end
 
   #changes n and/or m to a positive number is negative
-  if n < -1
-    n = n.abs
-  end
-  if m < -1
-    m = m.abs
-  end
+  n = n.abs
+  m = m.abs
 
-  m_factors = is_factor?(m)
-  n_factors = is_factor?(n)
-  m_primes = []
-  n_primes = []
+  common = prime_factors(factors(m)) & prime_factors(factors(n))
+  return false if common.length > 0
 
-  for i in m_factors
-    if prime_checker(i) == true
-      m_primes.push(i)
-    end
-  end
-
-  for i in n_factors
-    if prime_checker(i) == true
-      n_primes.push(i)
-    end
-  end
-  n_primes
-
-  common = n_primes & m_primes
-  if common.length > 0
-    return false
-  end
-
-  return true
+  true
 end
